@@ -3,6 +3,7 @@ const assert = require('node:assert/strict')
 const fs = require('node:fs')
 const path = require('node:path')
 
+const { ErrorInvalidPath, ErrorInvalidWord } = require('../CustomExceptions')
 const { writeFile, readFileAndCount } = require('..')
 
 test('1. package.json is present', (t) => {
@@ -78,7 +79,7 @@ test.describe('3. readFileAndCount', () => {
     readFileAndCount(undefined, (err, count) => {
       fs.rmSync('tmp', { recursive: true })
 
-      assert.strictEqual(err.message, 'No se ha especificado la palabra a buscar')
+      assert.strictEqual(err.message, new ErrorInvalidWord().message)
       done()
     })
   })
@@ -86,7 +87,7 @@ test.describe('3. readFileAndCount', () => {
   test.test('3.3 readFileAndCount, returns error if no path specified', (t, done) => {
     // call readFileAndCount
     readFileAndCount('word', (err, count) => {
-      assert.strictEqual(err.message, 'No se ha especificado el path del archivo')
+      assert.strictEqual(err.message, new ErrorInvalidPath().message)
       done()
     })
   })
