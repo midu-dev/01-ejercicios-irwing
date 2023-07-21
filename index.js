@@ -6,7 +6,11 @@ async function exists (path) {
   return await fs.existsSync(path)
 }
 
-const { ErrorInvalidPath, ErrorInvalidWord } = require('./CustomExceptions')
+const {
+  ErrorInvalidData,
+  ErrorInvalidPath,
+  ErrorInvalidWord
+} = require('./CustomExceptions')
 
 // Ejercicio 2
 async function writeFile (filePath, data, callback) {
@@ -17,7 +21,7 @@ async function writeFile (filePath, data, callback) {
     const response = await fsp.writeFile(filePath, data)
     return callback(response)
   } catch (error) {
-    return error
+    return callback(new ErrorInvalidData())
   }
 }
 

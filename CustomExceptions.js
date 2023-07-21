@@ -1,3 +1,11 @@
+class ErrorInvalidData extends Error {
+  constructor () {
+    super()
+    this.name = 'ErrorInvalidWord'
+    this.message = 'No se ha especificado el string a escribir'
+  }
+}
+
 class ErrorInvalidPath extends Error {
   constructor () {
     super()
@@ -15,6 +23,7 @@ class ErrorInvalidWord extends Error {
 }
 
 module.exports = {
+  ErrorInvalidData,
   ErrorInvalidPath,
   ErrorInvalidWord
 }

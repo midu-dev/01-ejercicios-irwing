@@ -12,7 +12,8 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test": "node --test",
-    "test:watch": "node --test --watch ./test"
+    "test:watch": "node --test --watch ./test",
+    "test:coverage": "node --experimental-test-coverage --watch ./test"
   },
   "repository": {
     "type": "git",
