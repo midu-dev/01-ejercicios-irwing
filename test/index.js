@@ -3,6 +3,11 @@ const assert = require('node:assert/strict')
 const fs = require('node:fs')
 const path = require('node:path')
 
+const {
+  ErrorInvalidData,
+  ErrorInvalidPath,
+  ErrorInvalidWord
+} = require('../CustomExceptions')
 const { writeFile, readFileAndCount } = require('..')
 
 test('1. package.json is present', (t) => {
@@ -12,15 +17,34 @@ test('1. package.json is present', (t) => {
   assert.strictEqual(name, 'ejercicios-nodejs')
 })
 
-test('2. writeFile', (t, done) => {
-  const filePath = path.join('tmp', 'testfile')
-  writeFile(filePath, 'test data', (err) => {
-    assert.ifError(err)
-    // check if file exists
-    assert.strictEqual(fs.existsSync(filePath), true)
-    // remove tmp folder
-    fs.rmSync('tmp', { recursive: true })
-    done()
+test.describe('2. writeFile', () => {
+  test('2.1 should write a file', (t, done) => {
+    const filePath = path.join('tmp', 'testfile')
+    writeFile(filePath, 'test data', (err) => {
+      assert.ifError(err)
+      // check if file exists
+      assert.strictEqual(fs.existsSync(filePath), true)
+      // remove tmp folder
+      fs.rmSync('tmp', { recursive: true })
+      done()
+    })
+  })
+
+  /*
+    He agregado este test para probar que funciona
+    el modo coverage del api node:test si funciona
+    aunque dicen que todavía es experimmental
+
+    Estos fueron los resultados:
+    sin este test el coverage es de line % 92.45
+    con este test el coverage es de line % 96.23
+  */
+  test('2.2 writeFile, returns error if not receive data', (t, done) => {
+    const filePath = path.join('tmp', 'testfile')
+    writeFile(filePath, undefined, (err) => {
+      assert.strictEqual(err.message, new ErrorInvalidData().message)
+      done()
+    })
   })
 })
 
@@ -78,7 +102,7 @@ test.describe('3. readFileAndCount', () => {
     readFileAndCount(undefined, (err, count) => {
       fs.rmSync('tmp', { recursive: true })
 
-      assert.strictEqual(err.message, 'No se ha especificado la palabra a buscar')
+      assert.strictEqual(err.message, new ErrorInvalidWord().message)
       done()
     })
   })
@@ -86,7 +110,7 @@ test.describe('3. readFileAndCount', () => {
   test.test('3.3 readFileAndCount, returns error if no path specified', (t, done) => {
     // call readFileAndCount
     readFileAndCount('word', (err, count) => {
-      assert.strictEqual(err.message, 'No se ha especificado el path del archivo')
+      assert.strictEqual(err.message, new ErrorInvalidPath().message)
       done()
     })
   })
